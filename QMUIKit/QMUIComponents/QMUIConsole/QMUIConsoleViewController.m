@@ -353,7 +353,7 @@
 }
 
 - (void)printLog {
-    self.showingLogItems = [self.logItems qmui_filterWithBlock:^BOOL(QMUIConsoleLogItem * _Nonnull logItem) {
+    self.showingLogItems = [[self.logItems copy] qmui_filterWithBlock:^BOOL(QMUIConsoleLogItem * _Nonnull logItem) {
         BOOL shouldPrintLevel = !self.selectedLevels.count || [self.selectedLevels containsObject:logItem.level];
         BOOL shouldPrintName = !self.selectedNames.count || [self.selectedNames containsObject:logItem.name];
         return shouldPrintLevel && shouldPrintName;
