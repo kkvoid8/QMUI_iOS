@@ -342,7 +342,9 @@
 - (void)logWithLevel:(NSString *)level name:(NSString *)name logString:(id)logString {
     QMUIConsoleLogItem *logItem = [QMUIConsoleLogItem logItemWithLevel:level name:name timeString:[self.dateFormatter stringFromDate:[NSDate new]] logString:logString];
     [self searchInLogItem:logItem];
-    [self.logItems addObject:logItem];
+    if (logItem) {
+        [self.logItems addObject:logItem];
+    }
     dispatch_async(dispatch_get_main_queue(), ^{// 避免频繁打 log 时卡顿
         [self printLog];
     });
