@@ -579,19 +579,25 @@
     NSMutableArray<QMUIPopupMenuItem *> *items = [[NSMutableArray alloc] init];
     NSMutableSet<NSString *> *itemTitles = [[NSMutableSet alloc] init];
     [self.logItems enumerateObjectsUsingBlock:^(QMUIConsoleLogItem * _Nonnull logItem, NSUInteger idx, BOOL * _Nonnull stop) {
-        [itemTitles addObject:titleBlock(logItem)];
+        if (titleBlock(logItem)) {
+            [itemTitles addObject:titleBlock(logItem)];
+        }
     }];
     [[itemTitles sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(description)) ascending:YES]]] enumerateObjectsUsingBlock:^(NSString * _Nonnull title, NSUInteger idx, BOOL * _Nonnull stop) {
         QMUIPopupMenuItem *item = [QMUIPopupMenuItem itemWithTitle:title handler:^(__kindof QMUIPopupMenuItem * _Nonnull aItem, QMUIPopupMenuItemView * _Nonnull aItemView, NSInteger section, NSInteger index) {
             aItemView.button.selected = !aItemView.button.selected;
-            if (aItemView.button.selected) {
-                [selectedArray addObject:title];
-            } else {
-                [selectedArray removeObject:title];
+            if (title) {
+                if (aItemView.button.selected) {
+                    [selectedArray addObject:title];
+                } else {
+                    [selectedArray removeObject:title];
+                }
             }
             [weakSelf printLog];
         }];
-        [items addObject:item];
+        if (item) {
+            [items addObject:item];
+        }
     }];
     return items.copy;
 }
